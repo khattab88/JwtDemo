@@ -14,7 +14,12 @@ namespace API.Services
             { "user3", "password3" },
         };
 
-        private string privateKey = "PRIVATE KEY USED FOR PUBLIC_PRIVATE KEY ENCRYPTION";
+        private readonly IConfiguration _configuration;
+
+        public AuthService(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
 
         public string Authenticate(string userName, string password)
         {
@@ -24,7 +29,7 @@ namespace API.Services
             }
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var tokenKey = Encoding.ASCII.GetBytes(privateKey);
+            var tokenKey = Encoding.UTF8.GetBytes(_configuration.GetValue<string>("Jwt:PrivateKey"));
             var tokenDescriptor = new SecurityTokenDescriptor 
             {
                 Subject = new ClaimsIdentity(new Claim[]
